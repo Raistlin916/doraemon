@@ -36,11 +36,20 @@ export default class Animation extends Container {
       }
     }
     if (rectsData.flip) {
-      this.sprite.scale.x = rectsData.flip[0]
-      this.sprite.x = this.width
+      if (rectsData.flip[0] !== 1) {
+        this.sprite.scale.x = rectsData.flip[0]
+        this.sprite.x = this.width
+      }
+
+      if (rectsData.flip[1] !== 1) {
+        this.sprite.scale.y = rectsData.flip[1]
+        this.sprite.y = this.height
+      }
     } else {
       this.sprite.scale.x = 1
+      this.sprite.scale.y = 1
       this.sprite.x = 0
+      this.sprite.y = 0
     }
     this.rects = rectsData.rects
   }
