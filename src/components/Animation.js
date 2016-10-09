@@ -1,34 +1,47 @@
-import { Rectangle, Sprite } from 'pixi.js'
+import { Rectangle, Sprite, Container } from 'pixi.js'
 
-export default class Animation {
-  constructor(texture, sw, sh, dw, dh, speed) {
+export default class Animation extends Container {
+  constructor(texture, options) {
+    super(texture)
+
+    this.speed = options.speed
+    this.frames = options.frames
+    this.initialFrame = options.initialFrame
+
     this.texture = texture
-    this.sw = sw
-    this.sh = sh
-    this.dw = dw
-    this.dh = dh
-    this.speed = speed
-    this.elapse = 0
-    this.rowNum = 4
-    this.columnNum = 4
+    this.texture.frame = new Rectangle(0, 0, options.width, options.height)
+    this.sprite = new Sprite(texture)
+    this.addChild(this.sprite)
+
+    this.play(this.initialFrame)
   }
 
   update(dt) {
     this.elapse += dt
-    let frame = parseInt(this.elapse / this.speed, 10)
-    frame %= this.rowNum
-    this.texture.frame = new Rectangle(this.sw * frame, 0, this.sw, this.sh)
+    let frameIndex = parseInt(this.elapse / this.speed, 10)
+
+    frameIndex %= this.rects.length
+
+    this.texture.frame = this.rects[frameIndex]
   }
 
-  getSprite() {
-    const sprite = new Sprite(this.texture)
-    sprite.width = this.dw
-    sprite.height = this.dh
-    return sprite
-  }
-
-  play(animationName) {
-    this.currentName = animationName
+  play(frameName) {
+    this.currentFrame = frameName
     this.elapse = 0
+
+    let rectsData = this.frames[this.currentFrame]
+    if (Array.isArray(rectsData)) {
+      rectsData = {
+        rects: rectsData
+      }
+    }
+    if (rectsData.flip) {
+      this.sprite.scale.x = rectsData.flip[0]
+      this.sprite.x = this.width
+    } else {
+      this.sprite.scale.x = 1
+      this.sprite.x = 0
+    }
+    this.rects = rectsData.rects
   }
 }
