@@ -9,9 +9,16 @@ export default class Animation extends Container {
     this.initialFrame = options.initialFrame
 
     this.texture = texture
-    this.texture.frame = new Rectangle(0, 0, options.width, options.height)
     this.sprite = new Sprite(texture)
+
+    this.sw = options.sw || options.width
+    this.sh = options.sh || options.height
+
+    this.texture.frame = new Rectangle(0, 0, this.sw, this.sh)
     this.addChild(this.sprite)
+
+    this.width = options.width
+    this.height = options.height
 
     this.play(this.initialFrame)
   }
@@ -21,7 +28,6 @@ export default class Animation extends Container {
     let frameIndex = parseInt(this.elapse / this.speed, 10)
 
     frameIndex %= this.rects.length
-
     this.texture.frame = this.rects[frameIndex]
   }
 
@@ -38,12 +44,12 @@ export default class Animation extends Container {
     if (rectsData.flip) {
       if (rectsData.flip[0] !== 1) {
         this.sprite.scale.x = rectsData.flip[0]
-        this.sprite.x = this.width
+        this.sprite.x = this.sw
       }
 
       if (rectsData.flip[1] !== 1) {
         this.sprite.scale.y = rectsData.flip[1]
-        this.sprite.y = this.height
+        this.sprite.y = this.sh
       }
     } else {
       this.sprite.scale.x = 1

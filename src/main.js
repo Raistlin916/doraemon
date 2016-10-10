@@ -1,6 +1,6 @@
 import 'normalize.css'
 import { autoDetectRenderer, loader, Container, Rectangle } from 'pixi.js'
-import Animation from './components/Animation'
+import Animation from './base/Animation'
 
 const renderer = autoDetectRenderer(500, 500,
    { antialias: false, transparent: true, resolution: 1 }
@@ -22,8 +22,10 @@ loader
   .load(() => {
     const texture = loader.resources['assets/doraemon.png'].texture
     const doraemon = new Animation(texture, {
-      width: 64,
-      height: 64,
+      width: 32,
+      height: 32,
+      sw: 64,
+      sh: 64,
       speed: 100,
       initialFrame: 'left',
       frames: {
