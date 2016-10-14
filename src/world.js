@@ -45,6 +45,7 @@ loader
         frames: doraemonFrames
       })
       stage.addChild(doraemon)
+      stage.children.sort((a, b) => a.y - b.y)
       const ins = new Actor(doraemon, x, y)
       objs.push(ins)
 
