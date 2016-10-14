@@ -28,6 +28,15 @@ world.addRule(({ createDoraemon }) => {
     people.push(createDoraemon(Math.sin(a) * r + sx, Math.cos(a) * r + sy))
   }
 
+  let offset = 0
+  setInterval(() => {
+    offset += 1
+    for (let n = 0; n < num; n += 1) {
+      const a = (n - offset) / num * Math.PI * 2
+      people[n].runTo(Math.sin(a) * r + sx, Math.cos(a) * r + sy, 300)
+    }
+  }, 300)
+
   let isActive = false
   window.addEventListener('mousedown', () => {
     isActive = true

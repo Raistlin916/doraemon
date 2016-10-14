@@ -45,7 +45,6 @@ loader
         frames: doraemonFrames
       })
       stage.addChild(doraemon)
-      stage.children.sort((a, b) => a.y - b.y)
       const ins = new Actor(doraemon, x, y)
       objs.push(ins)
 
@@ -61,6 +60,7 @@ loader
         requestAnimationFrame(r)
         renderer.render(stage)
 
+        stage.children.sort((a, b) => a.y - b.y)
         objs.forEach(item => item.update(dt))
       }
       r()
