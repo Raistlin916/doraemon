@@ -1,11 +1,15 @@
 import 'normalize.css'
 import { autoDetectRenderer, loader, Container, Rectangle } from 'pixi.js'
 import Animation from './base/Animation'
+import Actor from './base/Actor'
 
+
+const world = {}
 const renderer = autoDetectRenderer(500, 500,
    { antialias: false, transparent: true, resolution: 1 }
 )
 document.body.appendChild(renderer.view)
+world.canvas = renderer.view
 const stage = new Container()
 
 const rectsCreator = rowIndex => {
@@ -16,7 +20,13 @@ const rectsCreator = rowIndex => {
   return rects
 }
 
-const world = {}
+const doraemonFrames = {
+  idle: rectsCreator(0),
+  down: rectsCreator(0),
+  up: rectsCreator(1),
+  right: rectsCreator(2),
+  left: { rects: rectsCreator(2), flip: [-1, 1] }
+}
 
 loader
   .add('assets/doraemon.png')
@@ -31,18 +41,14 @@ loader
         sw: 64,
         sh: 64,
         speed: 100,
-        initialFrame: initialFrame || 'left',
-        frames: {
-          down: rectsCreator(0),
-          up: rectsCreator(1),
-          right: rectsCreator(2),
-          left: { rects: rectsCreator(2), flip: [-1, 1] }
-        }
+        initialFrame: initialFrame || 'idle',
+        frames: doraemonFrames
       })
       stage.addChild(doraemon)
-      objs.push(doraemon)
-      doraemon.x = x
-      doraemon.y = y
+      const ins = new Actor(doraemon, x, y)
+      objs.push(ins)
+
+      return ins
     }
 
     world.start = () => {

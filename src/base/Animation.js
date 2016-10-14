@@ -2,6 +2,7 @@ import { Rectangle, Sprite, Container } from 'pixi.js'
 
 export default class Animation extends Container {
   constructor(texture, options) {
+    texture = texture.clone()
     super(texture)
 
     this.speed = options.speed
@@ -19,7 +20,6 @@ export default class Animation extends Container {
 
     this.width = options.width
     this.height = options.height
-
     this.play(this.initialFrame)
   }
 
@@ -32,6 +32,9 @@ export default class Animation extends Container {
   }
 
   play(frameName) {
+    if (frameName === this.currentFrame) {
+      return
+    }
     this.currentFrame = frameName
     this.elapse = 0
 
@@ -58,5 +61,9 @@ export default class Animation extends Container {
       this.sprite.y = 0
     }
     this.rects = rectsData.rects
+  }
+
+  freeze() {
+    this.elapse = 0
   }
 }
