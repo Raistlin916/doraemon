@@ -61,7 +61,6 @@ export default class Actor {
     const dy = this.lastY - this.y
 
     if (dx === 0 && dy === 0) {
-      this.animation.play('idle')
       this.animation.freeze()
     } else if (Math.abs(dx) > Math.abs(dy)) {
       this.animation.play(dx > 0 ? 'left' : 'right')

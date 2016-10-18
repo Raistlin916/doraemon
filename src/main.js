@@ -1,42 +1,7 @@
 import world from './world'
+import { debounce, getRandomInt } from './utils'
 
-const debounce = (function() {
-  let tid = null;
-  return (fn, delay) => {
-    if (tid) {
-      return
-    }
-    tid = setTimeout(() => {
-      tid = null
-    }, delay)
-    fn()
-  };
-})()
-
-const getRandomInt = (min, max) =>
-    Math.floor(Math.random() * (max - min + 1)) + min
-
-world.addRule(({ createDoraemon }) => {
-  const people = []
-  const num = 30
-  const r = 120
-  const sx = 150
-  const sy = 150
-
-  for (let n = 0; n < num; n += 1) {
-    const a = n / num * Math.PI * 2
-    people.push(createDoraemon(Math.sin(a) * r + sx, Math.cos(a) * r + sy))
-  }
-
-  let offset = 0
-  setInterval(() => {
-    offset += 1
-    for (let n = 0; n < num; n += 1) {
-      const a = (n - offset) / num * Math.PI * 2
-      people[n].runTo(Math.sin(a) * r + sx, Math.cos(a) * r + sy, 500)
-    }
-  }, 1000)
-
+const initInput = people => {
   let isActive = false
   window.addEventListener('mousedown', () => {
     isActive = true
@@ -53,4 +18,70 @@ world.addRule(({ createDoraemon }) => {
       }, 100)
     }
   })
+}
+
+world.addRule(({ createActor }) => {
+  const clock = {
+    r: (window.innerWidth - 30) / 2
+  }
+  const initCircle = () => {
+    const people = []
+    const num = 30
+    const r = clock.r
+    const rx = clock.r
+    const ry = clock.r
+
+    for (let n = 0; n < num; n += 1) {
+      const a = n / num * Math.PI * 2
+      people.push(createActor('doraemon', Math.sin(a) * r + rx, Math.cos(a) * r + ry))
+    }
+
+    let offset = 0
+    setInterval(() => {
+      offset += 1
+      for (let n = 0; n < num; n += 1) {
+        const a = (n - offset) / num * Math.PI * 2
+        people[n].runTo(Math.sin(a) * r + rx, Math.cos(a) * r + ry, 500)
+      }
+    }, 1000)
+    return people
+  }
+
+
+  const initLine = getAngle => {
+    const r = clock.r - 10
+    const sx = clock.r + 10
+    const sy = clock.r - 10
+    const num = 5
+    const people = []
+
+    const getTargetPt = () => {
+      const a = getAngle()
+      return {
+        x: Math.cos(a) * r,
+        y: Math.sin(a) * r
+      }
+    }
+
+    let targetPt = getTargetPt()
+    for (let n = 0; n < num; n += 1) {
+      const p = n / num
+      people.push(createActor('nobita', sx + targetPt.x * p, sy + targetPt.y * p))
+    }
+
+    setInterval(() => {
+      targetPt = getTargetPt()
+      for (let n = 0; n < num; n += 1) {
+        const p = n / num
+        people[n].runTo(sx + targetPt.x * p, sy + targetPt.y * p, 500)
+      }
+    }, 1000)
+
+    return people
+  }
+
+  const circle = initCircle()
+  initLine(() => new Date().getMinutes() / 60 * Math.PI * 2)
+  initLine(() => new Date().getSeconds() / 60 * Math.PI * 2)
+  initInput(circle)
 })

@@ -28,24 +28,41 @@ const doraemonFrames = {
   left: { rects: rectsCreator(2), flip: [-1, 1] }
 }
 
+const nobitaFrames = {
+  idle: rectsCreator(5),
+  down: rectsCreator(5),
+  up: rectsCreator(6),
+  right: rectsCreator(7),
+  left: { rects: rectsCreator(7), flip: [-1, 1] }
+}
+
+const framesMap = {
+  nobita: nobitaFrames,
+  doraemon: doraemonFrames
+}
+
 loader
   .add('assets/doraemon.png')
   .load(() => {
     const texture = loader.resources['assets/doraemon.png'].texture
     const objs = []
 
-    const createDoraemon = (x, y, initialFrame) => {
-      const doraemon = new Animation(texture, {
+    const createActor = (framesName, x, y, initialFrame) => {
+      if (!framesMap[framesName]) {
+        throw new Error('unknow framesName')
+      }
+
+      const animation = new Animation(texture, {
         width: 32,
         height: 32,
         sw: 64,
         sh: 64,
         speed: 100,
         initialFrame: initialFrame || 'idle',
-        frames: doraemonFrames
+        frames: framesMap[framesName]
       })
-      stage.addChild(doraemon)
-      const ins = new Actor(doraemon, x, y)
+      stage.addChild(animation)
+      const ins = new Actor(animation, x, y)
       objs.push(ins)
 
       return ins
@@ -67,7 +84,7 @@ loader
     }
 
     world.rule({
-      createDoraemon
+      createActor
     })
     world.start()
   })

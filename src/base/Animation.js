@@ -24,6 +24,9 @@ export default class Animation extends Container {
   }
 
   update(dt) {
+    if (this.frozen) {
+      return
+    }
     this.elapse += dt
     let frameIndex = parseInt(this.elapse / this.speed, 10)
 
@@ -32,6 +35,7 @@ export default class Animation extends Container {
   }
 
   play(frameName) {
+    this.frozen = false
     if (frameName === this.currentFrame) {
       return
     }
@@ -61,9 +65,10 @@ export default class Animation extends Container {
       this.sprite.y = 0
     }
     this.rects = rectsData.rects
+    this.update(0)
   }
 
   freeze() {
-    this.elapse = 0
+    this.frozen = true
   }
 }
