@@ -19,9 +19,9 @@ const getRandomInt = (min, max) =>
 world.addRule(({ createDoraemon }) => {
   const people = []
   const num = 30
-  const r = 100
-  const sx = 100
-  const sy = 100
+  const r = 120
+  const sx = 150
+  const sy = 150
 
   for (let n = 0; n < num; n += 1) {
     const a = n / num * Math.PI * 2
@@ -33,9 +33,9 @@ world.addRule(({ createDoraemon }) => {
     offset += 1
     for (let n = 0; n < num; n += 1) {
       const a = (n - offset) / num * Math.PI * 2
-      people[n].runTo(Math.sin(a) * r + sx, Math.cos(a) * r + sy, 300)
+      people[n].runTo(Math.sin(a) * r + sx, Math.cos(a) * r + sy, 500)
     }
-  }, 300)
+  }, 1000)
 
   let isActive = false
   window.addEventListener('mousedown', () => {
